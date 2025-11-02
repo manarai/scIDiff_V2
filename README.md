@@ -5,7 +5,20 @@
 
 ## Install
 ```bash
+# Create conda env
+conda create -n scqdiff python=3.10
+conda activate scidiff
+
+# Clone the repository
+git clone https://github.com/manarai/scQDiff.git
+cd sQIDiff
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install in development mode
 pip install -e .
+
 ```
 
 ## AnnData / scVelo / CellRank
