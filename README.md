@@ -32,7 +32,7 @@ python -m scqdiff.pipeline.train_from_anndata
   --h5ad data.h5ad --epochs 200
   --vel-layer velocity
   --ptime-key rank_pseudotime
-   --fate-index 0
+  --fate-index 0
   --nbins 12
   --rank 3
   --out-prefix results/my_run
