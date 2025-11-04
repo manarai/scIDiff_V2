@@ -28,7 +28,18 @@ pip install -e .
 
 **CLI training:**
 ```bash
-python -m scqdiff.pipeline.train_from_anndata --h5ad data.h5ad --epochs 200   --vel-layer velocity --ptime-key rank_pseudotime   --fate-index 0 --nbins 12 --rank 3 --out-prefix results/my_run --cpdb-means cpdb/significant_means.parquet --cpdb-pvals cpdb/pvalues.parquet --time-key bin_or_pseudotime_key --comm-knn 20 --comm-gain 0.2
+python -m scqdiff.pipeline.train_from_anndata
+  --h5ad data.h5ad --epochs 200
+  --vel-layer velocity
+  --ptime-key rank_pseudotime
+   --fate-index 0
+  --nbins 12
+  --rank 3
+  --out-prefix results/my_run
+  --cpdb-means cpdb/significant_means.parquet
+  --cpdb-pvals cpdb/pvalues.parquet
+  --time-key bin_or_pseudotime_key
+  --comm-knn 20 --comm-gain 0.2
 
 ```
 
