@@ -70,14 +70,14 @@ This forward–reverse asymmetry provides a rigorous way to identify **irreversi
 
 With **CellPhoneDB** ligand–receptor priors, scIDiff models **time-evolving communication graphs**:
 
-$$
-dX_t^{(i)} = u_{\text{intra}}\!\big(X_t^{(i)}, t\big)\,dt
-+ \sum_j W_{ij}(t)\,f\!\big(X_t^{(j)} - X_t^{(i)}\big)\,dt
-+ \sqrt{2\beta}\,dW_t^{(i)}.
-$$
+\[
+dX_t^{(i)} = u_{\text{intra}}(X_t^{(i)}, t)dt
++ \sum_j W_{ij}(t)f(X_t^{(j)} - X_t^{(i)})dt
++ \sqrt{2\beta}dW_t^{(i)}.
+\]
 
-- **$W_{ij}(t)$** — communication strength between cells *i* and *j*  
-- **$f(\Delta x)$** — interaction kernel (e.g., linear or gated)
+- **$W_{ij}(t)$** — communication strength between cells  
+- **$f(\Delta x)$** — interaction kernel  
 
 Result: **communication archetypes** (e.g., inflammatory relay, exhaustion/resolution) that co-evolve with regulatory drift.
 
