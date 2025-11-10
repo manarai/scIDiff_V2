@@ -9,10 +9,6 @@ It unifies **optimal transport**, **score-based generative modeling**, and **reg
 
 Given observed cell states sampled at different times or perturbation conditions, scIDiff models a **stochastic process**:
 
-\[
-dX_t = u(X_t, t)dt + \sqrt{2\beta}dW_t
-\]
-
 \$$
 dX_t = u(X_t, t)\,dt + \sqrt{2\beta}\,dW_t
 \$$
@@ -23,15 +19,15 @@ dX_t = u(X_t, t)\,dt + \sqrt{2\beta}\,dW_t
 
 The learned drift transports the empirical initial distribution $\rho_0$ to the terminal $\rho_1$ while minimizing a Schrödinger-Bridge energy:
 
-\[
+\$$
 \min_u \; \text{KL}(P_u \,\|\, P_{\text{ref}}) \quad \text{s.t.} \quad \rho(0)=\rho_0, \;\rho(1)=\rho_1.
-\]
+\$$
 
 A **temporal Jacobian**
 
-\[
+\$$
 J(t) = \frac{\partial u}{\partial x}(t)
-\]
+\$$
 
 encodes local, causal gene-to-gene influence along time, revealing how gene modules control differentiation flow.
 
@@ -73,11 +69,11 @@ This forward–reverse asymmetry provides a rigorous way to identify **irreversi
 
 With **CellPhoneDB** ligand–receptor priors, scIDiff models **time-evolving communication graphs**:
 
-\[
+\$$
 dX_t^{(i)} = u_{\text{intra}}(X_t^{(i)}, t)dt
 + \sum_j W_{ij}(t)f(X_t^{(j)} - X_t^{(i)})dt
 + \sqrt{2\beta}dW_t^{(i)}.
-\]
+\$$
 
 - **$W_{ij}(t)$** — communication strength between cells  
 - **$f(\Delta x)$** — interaction kernel  
@@ -90,9 +86,9 @@ Result: **communication archetypes** (e.g., inflammatory relay, exhaustion/resol
 
 scIDiff computes **entropy production** and **cycle flux** metrics to measure the degree of biological irreversibility:
 
-\[
+\$$
 \dot{S}(t) = \mathbb{E}\!\left[\frac{\|u(x,t)-u_{\text{rev}}(x,t)\|^2}{2\beta}\right]
-\]
+\$$
 
 - High $\dot{S}(t)$ → irreversible differentiation (e.g., commitment, exhaustion)  
 - Low $\dot{S}(t)$ → reversible or plastic states (e.g., stem, progenitor)  
