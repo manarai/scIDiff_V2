@@ -1,6 +1,6 @@
-# 🧬 scQDiff: Schrödinger Bridge Learning of Single-Cell Regulatory Dynamics
+# 🧬 scIDiff: Schrödinger Bridge Learning of Single-Cell Regulatory Dynamics
 
-scQDiff (single-cell Quantum Diffusion) learns time-dependent gene-regulatory drift fields directly from single-cell data. It combines Schrödinger Bridge optimal transport, score-based generative modeling, and regulatory network inference to explain how cells move through gene-expression space over time.
+scIDiff (single-cell inverse Diffusion) learns time-dependent gene-regulatory drift fields directly from single-cell data. It combines Schrödinger Bridge optimal transport, score-based generative modeling, and regulatory network inference to explain how cells move through gene-expression space over time.
 
 ## 🌌 Mathematical Foundations
 
