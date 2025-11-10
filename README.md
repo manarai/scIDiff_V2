@@ -1,6 +1,14 @@
 # 🧬 scIDiff: Schrödinger Bridge Learning of Single-Cell Regulatory Dynamics
 
-scIDiff (single-cell inverse Diffusion) learns time-dependent gene-regulatory drift fields from single-cell data by solving a Schrödinger Bridge (SB) problem. It unifies optimal transport, score-based generative modeling, and regulatory network inference to reconstruct how cells flow through gene-expression space over time — and how irreversibility emerges from these trajectories.
+How do cells decide their fate? What are the key genes that drive differentiation, and can we reverse the process? `scIDiff` (single-cell Inverse Diffusion) is a powerful framework designed to answer these fundamental questions by learning the continuous, time-dependent forces that guide cellular identity.
+
+By framing cellular development as a Schrödinger Bridge problem, `scIDiff` goes beyond static snapshots of single-cell data. It reconstructs the complete "flow" of gene expression, revealing the dynamic regulatory landscape that cells navigate. This allows us to:
+
+- **Learn the Regulatory Drift:** Uncover the vector field of gene regulation that pushes cells along developmental trajectories.
+- **Quantify Irreversibility:** Measure the "point of no return" in cell fate decisions, identifying the moments when a cell commits to a specific lineage.
+- **Infer Dynamic Gene Networks:** Move from static gene regulatory networks (GRNs) to a continuous movie of how gene-gene influences change over time.
+
+`scIDiff` unifies the principles of optimal transport and score-based generative modeling to provide a physically-grounded, yet biologically-interpretable, model of cellular dynamics.
 
 ## 🌌 Mathematical Foundations
 
@@ -43,6 +51,33 @@ $$dX_t = [u(X_t, t) - 2\beta\nabla_x\log\rho_t(X_t)]dt + \sqrt{2\beta}d\bar{W}_t
 - The reverse drift captures how much "work" would be required to reprogram cells backward in time (e.g., iPSC or rejuvenation).
 
 The difference $\Delta u = u_{\text{fwd}} - u_{\text{rev}}$ quantifies irreversibility — an analog of biological entropy production. This forward–reverse asymmetry provides a rigorous way to identify irreversible cell-fate decisions and the regulators (Yamanaka-like factors) capable of reversing them.
+
+### Temporal Jacobians and Archetype Decomposition
+
+scIDiff computes the temporal Jacobian tensors for both the forward ($J_{\text{fwd}}$) and reverse ($J_{\text{rev}}$) drift fields:
+
+$$J_{\text{fwd}}(t) = \frac{\partial u_{\text{fwd}}}{\partial x}(t) \quad \text{and} \quad J_{\text{rev}}(t) = \frac{\partial u_{\text{rev}}}{\partial x}(t)$$
+
+These Jacobians represent the instantaneous, causal influence of each gene on the expression rate of every other gene at a specific time $t$. To uncover the dominant modes of regulation and communication, scIDiff performs Singular Value Decomposition (SVD) on these tensors.
+
+For a given Jacobian $J(t)$, the SVD is:
+
+$$J(t) = U \Sigma V^T$$
+
+- **Regulatory Archetypes (U):** The left singular vectors (columns of $U$) represent co-regulated gene modules, or *regulatory archetypes*, that are active during the process.
+- **Communication Archetypes (V):** The right singular vectors (columns of $V$) correspond to the cellular states that are most influential, forming *communication archetypes*.
+
+This decomposition provides a low-rank approximation of the complex, high-dimensional regulatory dynamics, revealing the underlying structure of gene regulation during both forward (e.g., differentiation) and reverse (e.g., reprogramming) processes.
+
+### 🧬 Biological Guidance with RNA Velocity
+
+While the Schrödinger Bridge finds the most probable path between two cell populations, this path is a mathematical optimum—the "straightest line" through a high-dimensional landscape. Biological processes, however, rarely take the straightest path. They are constrained by the intricate machinery of gene regulation.
+
+To ensure our model respects these biological rules, `scIDiff` incorporates RNA velocity as a **biological compass**. By measuring the ratio of newly transcribed (unspliced) to mature (spliced) mRNA, RNA velocity provides a direct readout of the cell's immediate future—the direction it is *actually* moving in the next instant.
+
+`scIDiff` uses this information not as a rigid constraint, but as a powerful guiding force. As it computes the long-range trajectory between cell states, it continuously checks its direction against the local, instantaneous vectors provided by RNA velocity. This ensures the global path is composed of steps that are mechanistically plausible and consistent with the cell's internal transcriptional dynamics.
+
+The result is a model that balances global optimality with local biological realism, producing trajectories that are not just mathematically probable, but also biologically faithful.
 
 ## 🧠 What scIDiff Learns
 
@@ -157,4 +192,3 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 ---
 
 *scIDiff: Bridging cells across time through optimal transport and regulatory inference.*
-
