@@ -364,7 +364,7 @@ def instability_genes(
 
     # ── Panel 2: top instability genes across pseudotime ───────────────────
     ax1    = axes[1]
-    cmap2  = plt.cm.get_cmap("tab10", n_genes)
+    cmap2  = plt.get_cmap("tab10", n_genes)
     g_idx  = [gene_names.index(g) for g in top_n if g in gene_names]
 
     for rank, gi in enumerate(g_idx):
