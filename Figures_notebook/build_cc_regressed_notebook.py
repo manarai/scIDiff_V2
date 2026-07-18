@@ -1,5 +1,5 @@
 """
-Build Figures_notebook/Figure6_multiome_drift_cellcycle_regressed.ipynb.
+Build Figures_notebook/Figure6_01_multiome_drift_cellcycle_regressed_FA.ipynb.
 
 This is the source of truth: edit cell content here and re-run to regenerate
 the .ipynb. The notebook regresses S/G2M cell-cycle scores out of the joint
@@ -568,7 +568,7 @@ md(r"""## How to read the result
 
 # ─────────────────────────────────────────────────────────────────────────
 def main() -> None:
-    out = Path(__file__).resolve().parent / "Figure6_multiome_drift_cellcycle_regressed.ipynb"
+    out = Path(__file__).resolve().parent / "Figure6_01_multiome_drift_cellcycle_regressed_FA.ipynb"
     nb = nbf.v4.new_notebook()
     nb.cells = CELLS
     nb.metadata = {
