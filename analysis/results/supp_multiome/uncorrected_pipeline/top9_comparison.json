@@ -1,0 +1,64 @@
+{
+  "purpose": "Test manuscript v38 Supplementary-Note claim that a truly uncorrected multiome pipeline (no per-modality CC regression) leaves ExcNeuron top-9 dominated by Cdc20/Ccnb1/Cenpf.",
+  "run_config": {
+    "DO_CC_REGRESSION": false,
+    "n_cells_processed": 4878,
+    "n_HVG_rna": 2000,
+    "n_var_peaks_atac": 10000,
+    "n_latent": 30,
+    "drift_n_epochs": 5000
+  },
+  "top9_uncorrected_this_run": {
+    "ExcNeuron": [
+      "Cacna2d3",
+      "Col19a1",
+      "Neto1",
+      "Grik1",
+      "Npas1",
+      "Reln",
+      "Galntl6",
+      "Thrb",
+      "Kctd8"
+    ]
+  },
+  "top9_shipped_uncorrected_pipeline_ExcNeuron": [
+    "Rhbdl3",
+    "Eomes",
+    "Neurog2",
+    "Celsr1",
+    "Gm29260",
+    "Smoc1",
+    "Chd7",
+    "Mgp",
+    "C030005K06Rik"
+  ],
+  "top9_shipped_cc_pipeline_ExcNeuron": [
+    "Raly",
+    "Gnai2",
+    "Ndufa11",
+    "Adh5",
+    "Psma4",
+    "Bsg",
+    "Med19",
+    "Rprm",
+    "Cst3"
+  ],
+  "mitotic_reference_set": [
+    "Aurka",
+    "Aurkb",
+    "Bub1",
+    "Ccna2",
+    "Ccnb1",
+    "Ccnb2",
+    "Cdc20",
+    "Cenpf",
+    "Kif11",
+    "Kif20a",
+    "Mki67",
+    "Plk1",
+    "Top2a"
+  ],
+  "mitotic_hits_ExcNeuron_uncorrected_this_run": [],
+  "mitotic_hits_shipped_uncorrected_ExcNeuron": [],
+  "mitotic_hits_shipped_cc_ExcNeuron": []
+}
