@@ -23,6 +23,9 @@ Figures_notebook/results/
 examples/data/
 examples/results/
 examples/temp/
+analysis/cache/
+analysis/results/
+analysis/examples
 
 # Logs
 *.log
