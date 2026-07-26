@@ -13,6 +13,11 @@ and every cited number matches the reproducible output.
       environment.yml           (conda environment spec)
       manuscript/
         scJDO_manuscript_v54.md
+      figures/                  (all main + supplementary figures, PDF + 300 DPI PNG)
+        README.md               (per-figure source-notebook mapping)
+        main/                   Figure2 … Figure6 (+ Fig5 TV=0.1 companion, Fig6 validation)
+        supplementary/          Supplementary Note + bandwidth-sweep + saddle-localization
+        panels_and_diagnostics/ Individual panels + diagnostic subfigures
       code/
         run_all.sh              (sequential runner for the full chain)
         examples -> ../../examples/   (symlink; must resolve — see DATA.md)
