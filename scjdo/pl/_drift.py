@@ -341,6 +341,16 @@ def instability_genes(
     K          = act_norm.shape[1]
     arch_labels = [f"A{k+1}" for k in range(K)]
     sens_mask  = max_eig > sensitivity_threshold
+    # Auto-relax: if the strict threshold produces no sensitive windows but
+    # there is genuine positive-eigenvalue signal (max_eig > 0 anywhere), fall
+    # back to `max_eig > 0` — matches the gene-ranking mask in tl/_drift.py.
+    # Without this, branches with weak-but-real instability (e.g., Fig 3 Ery
+    # peak Re(λ) ≈ 0.04) show a legend of correctly ranked top genes but no
+    # plotted trajectories, which is misleading.
+    threshold_relaxed = False
+    if sens_mask.sum() == 0 and (max_eig > 0).any():
+        sens_mask = max_eig > 0
+        threshold_relaxed = True
     top_n      = top_genes[:n_genes]
 
     # ── Figure layout ──────────────────────────────────────────────────────
@@ -380,8 +390,12 @@ def instability_genes(
     ax1.axhline(0, color="gray", lw=0.5, ls="--")
     ax1.set_xlabel("Pseudotime")
     ax1.set_ylabel("Instability gene score")
+    _thresh_str = (f"auto-relaxed to Re(λ) > 0 — no windows exceeded default "
+                   f"threshold {sensitivity_threshold}"
+                   if threshold_relaxed
+                   else f"Re(λ) > {sensitivity_threshold}")
     ax1.set_title(f"Top {n_genes} instability-driving genes across pseudotime\n"
-                  "(score = projection onto max-eigenvalue eigenvector; shown only in sensitive windows)",
+                  f"(score = projection onto max-eigenvalue eigenvector; sensitive windows: {_thresh_str})",
                   fontsize=10)
     ax1.legend(ncol=min(n_genes, 5), fontsize=7, loc="upper right")
 
