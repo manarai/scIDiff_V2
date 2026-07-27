@@ -1,8 +1,8 @@
 # scJDO — Reviewer replication package
 
-This directory contains the final manuscript (v54) and a self-contained
+This directory contains the final manuscript (v56) and a self-contained
 copy of the analysis code that generates every figure. The chain has been
-end-to-end re-executed against manuscript v54 (2026-07-24 → 2026-07-26)
+end-to-end re-executed against manuscript v56 (2026-07-24 → 2026-07-26)
 and every cited number matches the reproducible output.
 
 ## Contents
@@ -12,7 +12,7 @@ and every cited number matches the reproducible output.
       DATA.md                   (data availability + setup)
       environment.yml           (conda environment spec)
       manuscript/
-        scJDO_manuscript_v54.md
+        scJDO_manuscript_v56.md
       figures/                  (all main + supplementary figures, PDF + 300 DPI PNG)
         README.md               (per-figure source-notebook mapping)
         main/                   Figure2 … Figure6 (+ Fig5 TV=0.1 companion, Fig6 validation)
@@ -66,7 +66,7 @@ Executed notebooks are rewritten in place with fresh outputs.
 
 ## Manuscript-to-code number pins
 
-Every quantitative claim in v54 can be regenerated from this tree:
+Every quantitative claim in v56 can be regenerated from this tree:
 
 | Manuscript number                                    | Regenerate by                                        |
 | ---------------------------------------------------- | ---------------------------------------------------- |
