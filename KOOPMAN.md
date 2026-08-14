@@ -22,7 +22,7 @@ gets measured.
 Let
 
 $$
-y(\tau) = \operatorname{vec}\bigl(J(\tau)\bigr) \in \mathbb{R}^{D^2}
+y(\tau) = \mathrm{vec}\bigl(J(\tau)\bigr) \in \mathbb{R}^{D^2}
 $$
 
 be the flattened Jacobian at pseudotime grid point $\tau$. Stack the
