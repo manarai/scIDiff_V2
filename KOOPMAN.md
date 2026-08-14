@@ -21,13 +21,17 @@ gets measured.
 
 Let
 
-$$y(\tau) = \operatorname{vec}\bigl(J(\tau)\bigr) \in \mathbb{R}^{D^2}$$
+$$
+y(\tau) = \operatorname{vec}\bigl(J(\tau)\bigr) \in \mathbb{R}^{D^2}
+$$
 
 be the flattened Jacobian at pseudotime grid point $\tau$. Stack the
 snapshots as rows of a trajectory matrix
 
-$$Y = \bigl[\,y(\tau_1)\;;\;y(\tau_2)\;;\;\dots\;;\;y(\tau_T)\,\bigr]
-\in \mathbb{R}^{T \times D^2}.$$
+$$
+Y = \bigl[\,y(\tau_1)\;;\;y(\tau_2)\;;\;\dots\;;\;y(\tau_T)\,\bigr]
+\in \mathbb{R}^{T \times D^2}.
+$$
 
 $Y$ is typically wide ($D^2 \gg T$) and low-rank in practice, because the
 operator changes smoothly along pseudotime and lives on a small manifold.
@@ -38,8 +42,10 @@ operator changes smoothly along pseudotime and lives on a small manifold.
 
 Compute the thin SVD
 
-$$Y = U \Sigma V^{\!\top}, \qquad
-Z = Y V_r = U_r \Sigma_r \in \mathbb{R}^{T \times r},$$
+$$
+Y = U \Sigma V^{\!\top}, \qquad
+Z = Y V_r = U_r \Sigma_r \in \mathbb{R}^{T \times r},
+$$
 
 with $r \ll D^2$. $Z$ is the *reduced* trajectory. All subsequent
 Koopman fitting takes place in $\mathbb{R}^r$; the reduction is what
@@ -78,16 +84,20 @@ number and the metric that produced it always travel together.
 
 The Koopman operator $\mathcal{K}$ advances observables, not states:
 
-$$(\mathcal{K}_{\Delta\tau}\, \psi)(y_\tau)
-   = \mathbb{E}\bigl[\psi(y_{\tau+\Delta\tau}) \,\big|\, y_\tau\bigr].$$
+$$
+(\mathcal{K}_{\Delta\tau}\, \psi)(y_\tau)
+   = \mathbb{E}\bigl[\psi(y_{\tau+\Delta\tau}) \,\big|\, y_\tau\bigr].
+$$
 
 With identity observables $\psi(y) = y$ this reduces to DMD in the
 reduced space. Given snapshot pairs $(z(\tau_i),\, z(\tau_{i+1}))$ the
 finite-dimensional approximation solves
 
-$$K \;=\; \arg\min_{K \in \mathbb{R}^{r \times r}}
+$$
+K \;=\; \arg\min_{K \in \mathbb{R}^{r \times r}}
    \sum_{i} \bigl\| z(\tau_{i+1}) - K\, z(\tau_i) \bigr\|_2^2
-   \;+\; \lambda \|K\|_F^2,$$
+   \;+\; \lambda \|K\|_F^2,
+$$
 
 by ridge-regularised least squares, i.e.
 $K = (Z_{-}^{\!\top} Z_{-} + \lambda I)^{-1} Z_{-}^{\!\top} Z_{+}$
@@ -104,8 +114,10 @@ pseudotime and branches — a single global $K$ blurs regime-specific
 behaviour. We therefore fit a *local* operator per grid point on a
 sliding window $W_\tau = [\tau - h,\, \tau + h]$:
 
-$$K_\tau \;=\; \arg\min_{K}
-   \sum_{i \in W_\tau} \bigl\| z(\tau_{i+1}) - K\, z(\tau_i) \bigr\|_2^2.$$
+$$
+K_\tau \;=\; \arg\min_{K}
+   \sum_{i \in W_\tau} \bigl\| z(\tau_{i+1}) - K\, z(\tau_i) \bigr\|_2^2.
+$$
 
 A `mode='global'` option fits a single $K$ on all snapshot pairs as a
 stationary baseline. The window half-width `window_half` controls the
@@ -118,13 +130,17 @@ smoother spectrum at the cost of resolution near sharp transitions.
 
 Eigendecompose each local operator:
 
-$$K_\tau v_k = \lambda_k(\tau)\, v_k.$$
+$$
+K_\tau v_k = \lambda_k(\tau)\, v_k.
+$$
 
 Convert discrete eigenvalues into **continuous-time rates** using the
 mean spacing $\Delta\tau$ of that window:
 
-$$\mu_k(\tau) \;=\; \frac{\log \lambda_k(\tau)}{\Delta\tau}
-             \;\in\; \mathbb{C}.$$
+$$
+\mu_k(\tau) \;=\; \frac{\log \lambda_k(\tau)}{\Delta\tau}
+             \;\in\; \mathbb{C}.
+$$
 
 - $\operatorname{Re}(\mu_k) > 0$ → *growing mode* (local instability of the
   operator sequence at $\tau$).
@@ -184,7 +200,9 @@ still coarsely sampled — but it is not fundamentally unidentifiable.
 For downstream parity with semi-NMF (patterns × activations), we lift
 the reference operator's eigenvectors back to $D \times D$:
 
-$$A_k \;=\; \operatorname{unvec}\bigl(V_r v_k\bigr) \in \mathbb{R}^{D \times D}.$$
+$$
+A_k \;=\; \operatorname{unvec}\bigl(V_r v_k\bigr) \in \mathbb{R}^{D \times D}.
+$$
 
 Complex conjugate eigenvectors are split into $(\operatorname{Re} v_k,\,
 \operatorname{Im} v_k)$ so the returned patterns are real-valued and
@@ -194,9 +212,11 @@ Per-time **amplitudes** use the biorthogonal left eigenvectors
 $w_k$ (solving $K_\tau^{\!\top} w_k = \lambda_k w_k$ and normalised so
 $w_k^{\mathsf{H}} v_k = 1$):
 
-$$b_k(\tau) \;=\; w_k^{\mathsf{H}} z(\tau) \;\in\; \mathbb{C},
+$$
+b_k(\tau) \;=\; w_k^{\mathsf{H}} z(\tau) \;\in\; \mathbb{C},
    \qquad
-   \text{activation}_k(\tau) = |b_k(\tau)|.$$
+   \text{activation}_k(\tau) = |b_k(\tau)|.
+$$
 
 Magnitudes are non-negative, matching the sign convention downstream
 code expects (`instability_scores`, `arch_instability_genes`, …).
