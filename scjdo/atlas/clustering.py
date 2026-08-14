@@ -45,25 +45,51 @@ class OperatorClustering:
     
     def prepare_operator_features(
         self,
-        metrics_keys: List[str] = ['lambda_max_plus', 'lambda_min_minus', 
-                                   'plasticity', 'stable_dim'],
+        metrics_keys: Optional[List[str]] = None,
         standardize: bool = True,
-        obsm_key: str = 'X_operator'
+        obsm_key: str = 'X_operator',
     ) -> np.ndarray:
         """
         Prepare operator features matrix from metrics.
-        
+
+        Default features (Task 2.2): ['lambda_max_plus', 'stability_depth_q',
+        'plasticity']. Two axes are dropped from the old four-tuple because
+        they were redundant with the rest and z-scored Leiden treated them as
+        independent, double-weighting the redundant axis:
+
+          - `lambda_min_minus` (min-order statistic) is anti-correlated with
+            `lambda_max_plus` by construction; use `stability_depth_q`, which
+            is the dimension-stable quantile stability metric.
+          - `stable_dim` (# of Re(λ) < 0) overlaps with `plasticity` for cells
+            near neutrality (e.g. all-eigenvalues = -0.05 with ε = 0.1 scores
+            both maximally plastic AND maximally buffered).
+
+        Pass metrics_keys= to use a different feature set. To use spectrum-PC
+        features instead, build them via OperatorEmbedding(method='spectrum')
+        directly (requires store_eigenvalues=True on the atlas build).
+
         Args:
-            metrics_keys: List of metric keys in adata.obs
+            metrics_keys: List of metric keys in adata.obs. If None, uses the
+                three-feature default above and silently drops any keys not
+                present (backwards-compat with older adata that lack
+                stability_depth_q).
             standardize: Whether to standardize features
             obsm_key: Key to store operator features in adata.obsm
-            
+
         Returns:
             operator_features: (n_cells, n_features) operator feature matrix
-            
+
         Raises:
-            ValueError: If any metric key is not found in adata.obs
+            ValueError: If any explicitly requested metric key is not found.
         """
+        if metrics_keys is None:
+            preferred = ['lambda_max_plus', 'stability_depth_q', 'plasticity']
+            metrics_keys = [k for k in preferred if k in self.adata.obs]
+            if not metrics_keys:
+                raise ValueError(
+                    "No default operator features found in adata.obs. "
+                    "Run atlas.build() first."
+                )
         features = []
         for key in metrics_keys:
             if key not in self.adata.obs:

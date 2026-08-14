@@ -1,0 +1,21 @@
+{
+  "dataset": "scvelo.datasets.bonemarrow (Setty 2019 CD34+)",
+  "n_cells": 5780,
+  "n_genes": 6482,
+  "seed": 0,
+  "top_k": 30,
+  "n_pcs": 30,
+  "cluster_order": [
+    "HSC_1",
+    "HSC_2",
+    "Ery_1",
+    "Mono_1",
+    "Precursors",
+    "CLP",
+    "Mono_2",
+    "DCs",
+    "Ery_2",
+    "Mega"
+  ],
+  "iroot_cell_idx": 1722
+}

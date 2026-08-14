@@ -10,6 +10,7 @@ Each notebook uses the high-level API — 4–6 function calls, no boilerplate.
 | 03 | `03_schrodinger_bridge_tutorial` | 2D synthetic | Bridge on Gaussian source → target, forward/backward instability, de novo network edges | Trajectory plots, instability asymmetry table |
 | 04 | `04_paul15_schrodinger_tutorial` | Paul15 hematopoiesis | Bridge in 50-D PCA space, forward (differentiation) vs backward (de-differentiation) instability genes and regulators | Gene tables (forward/backward), hybrid regulator network |
 | 05 | `05_scopatlas_complete_workflow` | Your data + pre-trained model | Stable-operator atlas: operator metrics, embedding, clustering, biological interpretation | Operator regime UMAP, clustering comparison, regime statistics |
+| 10 | `10_paul15_koopman_tutorial` | Paul15 hematopoiesis | Koopman spectral backend on the Jacobian tensor: eigenvalues, growth rates, oscillation frequencies, side-by-side comparison with semi-NMF | Complex-plane spectrum, per-mode growth curves, local vs global operator, activation panels |
 
 ---
 

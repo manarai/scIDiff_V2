@@ -246,6 +246,9 @@ def fit_drift(
     # Archetype decomposition
     n_archetypes: int = 5,
     n_restarts: int = 5,
+    tv_lambda: float = 0.0,
+    archetype_method: str = "snmf",              # "snmf" | "koopman"
+    koopman_kwargs: Optional[dict] = None,
     # Output
     key_added: str = "scjdo",
     verbose: bool = True,
@@ -300,7 +303,26 @@ def fit_drift(
     n_windows     : Number of fixed windows (used only when windowing='fixed').
     overlap       : Fixed-window overlap fraction (legacy).
     smooth_sigma  : Post-binning Gaussian smoothing sigma (legacy).
-    key_added     : Where to store results in ``adata.uns``.
+    archetype_method : Decomposition backend for the temporal Jacobian tensor.
+                    ``'snmf'`` (default) uses non-negative activations of signed
+                    pattern operators (interpretable "programs"). ``'koopman'``
+                    uses windowed EDMD on the vectorised trajectory: modes are
+                    Koopman eigenvectors and per-time amplitudes come from the
+                    left-eigenvector projection, giving growth rates and
+                    oscillation frequencies as spectral summaries of the
+                    operator sequence. Best for dense, time-resolved,
+                    mostly-autonomous trajectories; less suited to sparse,
+                    branch-heavy atlases. See
+                    :func:`scjdo.archetypes.koopman.koopman_modes`.
+    koopman_kwargs : Extra keyword arguments forwarded to
+                    :func:`koopman_modes` when ``archetype_method='koopman'``.
+                    Common overrides: ``reduced_rank``, ``mode='local'|'global'``,
+                    ``window_half``, ``ridge``, ``smooth_sigma``.
+    key_added     : Where to store results in ``adata.uns``. Koopman-specific
+                    spectral diagnostics (eigenvalues, growth rates, oscillation
+                    frequencies, per-window operators) are stored under
+                    ``adata.uns[key_added]['koopman']`` when
+                    ``archetype_method='koopman'``.
 
     Examples
     --------
@@ -483,20 +505,43 @@ def fit_drift(
 
     T_eval = J_np.shape[0]
 
+    archetype_method = str(archetype_method).lower()
+    if archetype_method not in {"snmf", "koopman"}:
+        raise ValueError(f"archetype_method must be 'snmf' or 'koopman', got {archetype_method!r}")
+
     if verbose:
-        print("Running archetype decomposition (semi-NMF)...")
+        print(f"Running archetype decomposition ({archetype_method})...")
 
     # ── Archetype decomposition ────────────────────────────────────────────
-    J_smooth    = torch.from_numpy(J_np)
-    patterns, activations, recon_err = jacobian_modes(
-        J_smooth, rank=n_archetypes, n_restarts=n_restarts, seed=seed
-    )
-    activations_np = activations.numpy()   # (T, K) — already ≥ 0
+    J_smooth = torch.from_numpy(J_np)
+    koopman_diag: Optional[dict] = None
+    if archetype_method == "snmf":
+        patterns, activations, recon_err = jacobian_modes(
+            J_smooth, rank=n_archetypes, n_restarts=n_restarts, seed=seed,
+            tv_lambda=tv_lambda,
+        )
+    else:
+        from scjdo.archetypes.koopman import koopman_modes
+        kkw = dict(koopman_kwargs or {})
+        kkw.setdefault("mode", "local")
+        # Pass the pseudotime grid so eigenvalues convert to continuous-time rates.
+        patterns, activations, recon_err, koopman_diag = koopman_modes(
+            J_smooth, rank=n_archetypes,
+            grid=t_centers,
+            return_diagnostics=True,
+            **kkw,
+        )
+    activations_np = activations.numpy()   # (T, K) — non-negative
+
+    # The Koopman backend may return fewer real modes than requested
+    # (complex conjugate splitting, degenerate spectra). Use the actual
+    # returned count downstream so shape assumptions stay consistent.
+    n_archetypes_eff = int(patterns.shape[0])
 
     # Variance explained (R²)
     total_sq = float((J_smooth.reshape(T_eval, -1) ** 2).sum())
     recon_sq = float(np.sum((J_np.reshape(T_eval, -1) -
-                             (activations_np @ patterns.numpy().reshape(n_archetypes, -1))) ** 2))
+                             (activations_np @ patterns.numpy().reshape(n_archetypes_eff, -1))) ** 2))
     r2 = max(0.0, 1.0 - recon_sq / (total_sq + 1e-8))
 
     # Max real eigenvalue per time point (local sensitivity)
@@ -510,12 +555,12 @@ def fit_drift(
 
     # Normalize activations for downstream plotting
     act_norm = activations_np.copy()
-    for k in range(n_archetypes):
+    for k in range(n_archetypes_eff):
         a = act_norm[:, k]
         act_norm[:, k] = a / (a.max() + 1e-8)
 
-    # Sign convention: activations are already ≥ 0 from semi-NMF
-    sign_flip = [1.0] * n_archetypes
+    # Sign convention: activations are already ≥ 0 from semi-NMF / Koopman |b_k|.
+    sign_flip = [1.0] * n_archetypes_eff
 
     # Pairwise temporal correlations
     corr_mat = np.corrcoef(act_norm.T)   # (K, K)
@@ -571,7 +616,7 @@ def fit_drift(
     # specifically when archetype k is dominant?
     arch_instab_genes = {}
     arch_instab_scores = {}
-    for k in range(n_archetypes):
+    for k in range(n_archetypes_eff):
         # Windows where this archetype is in top quartile of activation
         thresh    = np.quantile(act_norm[:, k], 0.75)
         arch_mask = (act_norm[:, k] >= thresh) & sensitive_mask
@@ -607,6 +652,8 @@ def fit_drift(
         "recon_err":   recon_err,
         "params": {
             "n_archetypes": n_archetypes,
+            "n_archetypes_eff": n_archetypes_eff,
+            "archetype_method": archetype_method,
             "windowing": windowing,
             "n_windows": n_windows,          # legacy fixed-mode kwarg
             "T_eval": T_eval,                # actual length of J_tensor / t_centers
@@ -630,6 +677,30 @@ def fit_drift(
         "kernel_sweep":   _serialize_sweep(kernel_diag.get("sweep")),
         "lam_bootstrap":  kernel_diag.get("boots"),
     }
+
+    # Attach Koopman spectral diagnostics under a sub-key when applicable.
+    # These are complementary to the (patterns, activations) that already
+    # slot into the semi-NMF-shaped fields above.
+    if koopman_diag is not None:
+        adata.uns[key_added]["koopman"] = {
+            "eigenvalues":        koopman_diag.get("eigenvalues"),
+            "growth_rates":       koopman_diag.get("growth_rates"),
+            "freqs":              koopman_diag.get("freqs"),
+            # Branch-ambiguity companions — freqs above these limits are aliased.
+            "delta_tau":          koopman_diag.get("delta_tau"),
+            "nyquist_ang_freq":   koopman_diag.get("nyquist_ang_freq"),
+            "nyquist_cycle_freq": koopman_diag.get("nyquist_cycle_freq"),
+            # Branch-free geometry (does not depend on log λ) — often the
+            # better-posed half of the output in the snapshot setting.
+            "geometry":           koopman_diag.get("geometry"),
+            "singular_values":    koopman_diag.get("singular_values"),
+            "dt_seq":             koopman_diag.get("dt_seq"),
+            "ref_eigenvalues":    koopman_diag.get("ref_eigenvalues"),
+            "reduced_rank":       koopman_diag.get("reduced_rank"),
+            "window_half":        koopman_diag.get("window_half"),
+            "mode":               koopman_diag.get("mode"),
+            "whiten":             koopman_diag.get("whiten"),
+        }
 
     # Store model drift and pseudotime velocity for visualization
     with torch.no_grad():

@@ -18,6 +18,11 @@ from .regime_classifier import OperatorRegimeClassifier
 from .atlas_builder import StableOperatorAtlas
 from .operator_embedding import OperatorEmbedding, compute_operator_embedding
 from .clustering import OperatorClustering, quick_operator_clustering
+from .flow_topology import compute_ftle, assign_basins, fork_detector
+from .ensemble import OperatorEnsemble  # Task 3.2 — ensemble across drift-model members.
+from .quality import check_drift_quality, DriftQualityError  # Task 3.3 — drift-quality gate.
+from . import statistics  # Task 3.1 inference module — exposed as submodule.
+from . import quality  # Task 3.3 quality-gate module — exposed as submodule.
 
 __all__ = [
     "OperatorMetrics",
@@ -27,4 +32,12 @@ __all__ = [
     "compute_operator_embedding",
     "OperatorClustering",
     "quick_operator_clustering",
+    "compute_ftle",
+    "assign_basins",
+    "fork_detector",
+    "OperatorEnsemble",
+    "check_drift_quality",
+    "DriftQualityError",
+    "statistics",
+    "quality",
 ]

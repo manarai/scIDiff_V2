@@ -228,8 +228,8 @@ def validate_documentation():
     print("="*70)
     
     docs = [
-        'SCOPATLAS_DESIGN.md',
-        'SCOPATLAS_README.md',
+        'docs/scopatlas/DESIGN.md',
+        'docs/scopatlas/README.md',
         'examples/tutorial_scopatlas.py'
     ]
     

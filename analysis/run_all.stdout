@@ -1,0 +1,22 @@
+=== analysis/run_all.sh  MODE=all  Fri Jul 24 09:30:47 MDT 2026 ===
+START fa_composite_reanalysis.py  09:30:47
+OK    fa_composite_reanalysis.py  1s
+START init_at_gt_probe.py  09:30:48
+OK    init_at_gt_probe.py  43s
+START top_hvg_null.py  09:31:31
+OK    top_hvg_null.py  1s
+START tv_robustness_test.py  09:31:32
+OK    tv_robustness_test.py  538s
+START concurrent_fix_tests.py  09:40:30
+OK    concurrent_fix_tests.py  242s
+START saddle_readouts.py  09:44:32
+OK    saddle_readouts.py  176s
+START saddle_dense_sampling.py  09:47:28
+OK    saddle_dense_sampling.py  1929s
+START fig2b_peak_timing_null_analysis.ipynb  10:19:37
+OK    fig2b_peak_timing_null_analysis.ipynb  334s
+START fig2a_synthetic_benchmark.ipynb  10:25:11
+OK    fig2a_synthetic_benchmark.ipynb  92s
+START fig2c_embedding_benchmark.ipynb  10:26:43
+FAIL  fig2c_embedding_benchmark.ipynb  5s  rc=1  (see logs/fig2c_embedding_benchmark.log)
+START fig2d_pseudotime_embedding_benchmark.ipynb  10:26:48

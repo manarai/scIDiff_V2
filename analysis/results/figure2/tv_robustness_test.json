@@ -5,7 +5,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 5,
       "n_seeds": 8,
-      "recon_err_mean": 0.06433059783455816,
+      "recon_err_mean": 0.06433059877426009,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -22,7 +22,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 7,
       "n_seeds": 8,
-      "recon_err_mean": 0.07037988632876784,
+      "recon_err_mean": 0.07037989257202637,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -39,7 +39,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 8,
       "n_seeds": 8,
-      "recon_err_mean": 0.07669472152938571,
+      "recon_err_mean": 0.07669472267607283,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -56,7 +56,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 8,
       "n_seeds": 8,
-      "recon_err_mean": 0.13646826624946978,
+      "recon_err_mean": 0.13646730134229884,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -73,7 +73,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 5,
       "n_seeds": 8,
-      "recon_err_mean": 1.335272951103309,
+      "recon_err_mean": 1.3352718743466865,
       "per_seed_tau": [
         -0.10540925533894598,
         0.0,
@@ -92,7 +92,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 8,
       "n_seeds": 8,
-      "recon_err_mean": 0.10974211034331777,
+      "recon_err_mean": 0.10974210660733093,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -109,7 +109,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 6,
       "n_seeds": 8,
-      "recon_err_mean": 0.11534914872656875,
+      "recon_err_mean": 0.11534916402237022,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -126,7 +126,7 @@
       "matched_tau_median": 0.9999999999999999,
       "n_seeds_ge_0.9": 8,
       "n_seeds": 8,
-      "recon_err_mean": 0.1445426230858009,
+      "recon_err_mean": 0.14454419445187988,
       "per_seed_tau": [
         0.9999999999999999,
         0.9999999999999999,
@@ -143,7 +143,7 @@
       "matched_tau_median": 0.6,
       "n_seeds_ge_0.9": 1,
       "n_seeds": 8,
-      "recon_err_mean": 0.8687604547425256,
+      "recon_err_mean": 0.8687604986209596,
       "per_seed_tau": [
         0.6,
         0.39999999999999997,
@@ -160,7 +160,7 @@
       "matched_tau_median": 0.35856858280031806,
       "n_seeds_ge_0.9": 0,
       "n_seeds": 8,
-      "recon_err_mean": 3.834876362506174,
+      "recon_err_mean": 3.83489000805946,
       "per_seed_tau": [
         0.35856858280031806,
         0.35856858280031806,

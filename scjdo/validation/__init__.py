@@ -21,9 +21,11 @@ identifiability
 """
 
 from scjdo.validation.identifiability import (
+    PRIOR_KNOBS,
     archetype_cosine_similarity,
     instability_peak_overlap,
     model_sensitivity_report,
+    prior_sensitivity_report,
 )
 from scjdo.validation.null_models import (
     continuous_control_null,
@@ -47,4 +49,6 @@ __all__ = [
     "archetype_cosine_similarity",
     "instability_peak_overlap",
     "model_sensitivity_report",
+    "prior_sensitivity_report",
+    "PRIOR_KNOBS",
 ]

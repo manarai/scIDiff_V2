@@ -66,6 +66,7 @@ pip install faiss-cpu          # faster kNN for velocity prior
 |---|---|
 | `fit_drift(adata, ...)` | Train drift field, compute Jacobian tensor, decompose into archetypes |
 | `fit_bridge(adata, ...)` | Train Schrödinger Bridge between source/target populations |
+| `decompose_archetypes(J_tensor, method=...)` | Backend-agnostic decomposition — `snmf` (default) and `svd` return archetypes; `koopman` returns eigen-**modes** with a spectral / geometry diagnostics dict |
 | `get_instability_genes(adata)` | Extract top instability-driving genes per archetype (drift) |
 | `get_bridge_instability_genes(adata)` | Same for forward and backward bridge directions |
 | `infer_regulators(adata, ...)` | Link instability genes to upstream TF regulators via network database |
@@ -145,9 +146,58 @@ Figure-generating notebooks for the manuscript are in [`Figures_notebook/`](Figu
 
 ---
 
+## scOpAtlas
+
+`scjdo.atlas` classifies each cell by the local dynamical regime of the trained
+drift field — stable / plastic / unstable / deeply-stable — from the eigenvalue
+spectrum of the Jacobian. See:
+
+- [`docs/scopatlas/README.md`](docs/scopatlas/README.md) — full documentation
+- [`docs/scopatlas/QUICKSTART.md`](docs/scopatlas/QUICKSTART.md) — 5-minute walkthrough
+- [`docs/scopatlas/DESIGN.md`](docs/scopatlas/DESIGN.md) — design notes and open issues
+
+---
+
+## Optional spectral backend — Koopman
+
+The default archetype decomposition is semi-NMF (sparse, non-negative,
+interpretable as regulatory programs). scJDO also ships a **Koopman**
+backend that treats the vectorised Jacobian sequence as a trajectory of
+observables and fits a windowed linear operator on it — a complementary
+spectral lens. The output is Koopman **modes** (eigenvectors — not
+non-negative programs), continuous-time growth / decay rates, candidate
+oscillation frequencies bounded by an explicit Nyquist limit, and
+branch-free operator-geometry descriptors (departure-from-normality,
+reactivity, transient gain, eigenvector conditioning).
+
+```python
+sjd.tl.fit_drift(
+    adata,
+    archetype_method="koopman",   # or "snmf" (default)
+    koopman_kwargs=dict(mode="local", window_half=8, ridge=1e-4,
+                        whiten=False),   # reduced-space metric — see KOOPMAN.md §2
+)
+koop = adata.uns["scjdo"]["koopman"]
+koop["eigenvalues"], koop["growth_rates"], koop["freqs"]
+koop["delta_tau"], koop["nyquist_ang_freq"], koop["nyquist_cycle_freq"]
+koop["geometry"]     # henrici, reactivity, transient_gain, eigvec_cond
+koop["whiten"]       # metric echo — geometry descriptors depend on this
+```
+
+The Koopman output slots into the same downstream code as semi-NMF
+(shared `(K, D, D)` return shape and per-time activations; gene scores
+and instability tables just work). Best on dense time-resolved
+trajectories; less suited to sparse branch-heavy atlases. See
+[`KOOPMAN.md`](KOOPMAN.md) for the full derivation, per-window operator
+model, eigenvalue interpretation, and caveats specific to snapshot
+scRNA-seq.
+
+---
+
 ## Mathematical background
 
-For the full mathematical derivation see [`MATH.md`](MATH.md).
+For the full mathematical derivation see [`MATH.md`](MATH.md). For the
+Koopman spectral backend see [`KOOPMAN.md`](KOOPMAN.md).
 
 **Using scVI, Palantir, Harmony, or Slingshot?**
 scJDO accepts any latent space or pseudotime from any tool — one parameter
