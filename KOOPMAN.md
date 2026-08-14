@@ -142,17 +142,17 @@ $$
              \;\in\; \mathbb{C}.
 $$
 
-- $\operatorname{Re}(\mu_k) > 0$ → *growing mode* (local instability of the
+- $\mathrm{Re}(\mu_k) > 0$ → *growing mode* (local instability of the
   operator sequence at $\tau$).
-- $|\operatorname{Im}(\mu_k)| > 0$ → *oscillatory mode* with angular
-  frequency $|\operatorname{Im}(\mu_k)|$ radians per unit pseudotime.
-- $\operatorname{Re}(\mu_k) < 0$ → contracting / decaying mode.
+- $|\mathrm{Im}(\mu_k)| > 0$ → *oscillatory mode* with angular
+  frequency $|\mathrm{Im}(\mu_k)|$ radians per unit pseudotime.
+- $\mathrm{Re}(\mu_k) < 0$ → contracting / decaying mode.
 
 The dominant modes are those with the largest $|\lambda_k|$. In
 `mode='global'` this is the same ordering as the largest
-$\operatorname{Re}(\mu_k)$ (single stationary $\Delta\tau$); in
+$\mathrm{Re}(\mu_k)$ (single stationary $\Delta\tau$); in
 `mode='local'` it is **not** in general — each window has its own
-$\Delta\tau$, so $|\lambda|$-ranking and $\operatorname{Re}(\mu)$-ranking
+$\Delta\tau$, so $|\lambda|$-ranking and $\mathrm{Re}(\mu)$-ranking
 can diverge. Rank on whichever you intend to interpret and be explicit
 about the choice. Small-$|\lambda|$ modes tend to alias noise and should
 not be over-interpreted (see the branch note below and §8).
@@ -160,7 +160,7 @@ not be over-interpreted (see the branch note below and §8).
 **Branch ambiguity of $\log \lambda$.** The complex logarithm is
 multi-valued: both $\mu$ and $\mu + 2\pi i k / \Delta\tau$ satisfy
 $\lambda = e^{\mu \Delta\tau}$ for every integer $k$. This means the
-frequency $|\operatorname{Im}(\mu_k)|$ is *identified* only in
+frequency $|\mathrm{Im}(\mu_k)|$ is *identified* only in
 $[0,\, \pi / \Delta\tau)$ radians per unit pseudotime — the **Nyquist
 limit**, equivalently $1/(2\Delta\tau)$ cycles per unit pseudotime.
 Anything reported above that limit is not measured, it is *aliased*:
@@ -169,16 +169,16 @@ identifiable band. This is the mechanism behind the "large $r$ aliases noise as 
 oscillation frequencies" symptom in §8, but the precise causal chain
 is worth spelling out. Small-$|\lambda|$ noise eigenvalues have angles
 that are approximately *uniformly distributed* on the unit circle, so
-principal-branch $\log \lambda$ gives $|\operatorname{Im}(\log \lambda)|$
+principal-branch $\log \lambda$ gives $|\mathrm{Im}(\log \lambda)|$
 values spread across the whole identifiable band $[0, \pi)$ — not
 concentrated near the boundary. The observable symptom — implausibly
-huge $|\operatorname{Im}(\mu)|$ — comes from the division
-$\log \lambda / \Delta\tau$: $|\operatorname{Im}(\log \lambda)| \le \pi$
+huge $|\mathrm{Im}(\mu)|$ — comes from the division
+$\log \lambda / \Delta\tau$: $|\mathrm{Im}(\log \lambda)| \le \pi$
 is bounded, but $\pi / \Delta\tau$ can be arbitrarily large when the
 pseudotime step is small, so any noise mode looks like a
 high-frequency oscillation once expressed as a continuous-time rate.
 The Nyquist companions in the diagnostics dict flag exactly this: if a
-reported $|\operatorname{Im}(\mu_k(\tau))|$ sits at the ceiling
+reported $|\mathrm{Im}(\mu_k(\tau))|$ sits at the ceiling
 `nyquist_ang_freq[τ] = π / Δτ` it is a division artifact, not a
 measured oscillation.
 
@@ -188,7 +188,7 @@ alongside `freqs` so the caveat travels with the numbers. Before
 interpreting any oscillation, check that `freqs[t, k]` sits comfortably
 below `nyquist_ang_freq[t]`.
 
-Growth $\operatorname{Re}(\mu_k)$ has no such branch ambiguity: only
+Growth $\mathrm{Re}(\mu_k)$ has no such branch ambiguity: only
 the imaginary part of $\log \lambda$ is multi-valued. Discretisation
 error remains — a strongly growing mode within one $\Delta\tau$ step is
 still coarsely sampled — but it is not fundamentally unidentifiable.
@@ -201,11 +201,11 @@ For downstream parity with semi-NMF (patterns × activations), we lift
 the reference operator's eigenvectors back to $D \times D$:
 
 $$
-A_k \;=\; \operatorname{unvec}\bigl(V_r v_k\bigr) \in \mathbb{R}^{D \times D}.
+A_k \;=\; \mathrm{unvec}\bigl(V_r v_k\bigr) \in \mathbb{R}^{D \times D}.
 $$
 
-Complex conjugate eigenvectors are split into $(\operatorname{Re} v_k,\,
-\operatorname{Im} v_k)$ so the returned patterns are real-valued and
+Complex conjugate eigenvectors are split into $(\mathrm{Re} v_k,\,
+\mathrm{Im} v_k)$ so the returned patterns are real-valued and
 consumable by scJDO's existing gene-space projection routines.
 
 Per-time **amplitudes** use the biorthogonal left eigenvectors
@@ -302,7 +302,7 @@ apply specifically in the single-cell setting:
   assignment, time warping, and sampling density than in trajectory
   data.
 - **Snapshot data cannot unambiguously identify oscillations.** Treat
-  $|\operatorname{Im}(\mu_k)| > 0$ modes as *candidate* oscillations,
+  $|\mathrm{Im}(\mu_k)| > 0$ modes as *candidate* oscillations,
   not as physically resolved cycles.
 - **Spectral pollution near boundaries.** Windows that clip the
   beginning or end of pseudotime have fewer snapshot pairs and
