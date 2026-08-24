@@ -1,5 +1,0 @@
-branch,n_cells,r2,peak_sensitivity_t,max_sensitivity,top_instab_gene,top_regulator
-IPS,5249,1.0,0.02,0.113,Col6a3,Nfkb1
-Stromal,6350,1.0,0.98,0.6091,Cdkn2a,Nfkb1
-MET,5267,0.996,0.768,1.8994,Tagln,Trp53
-IPS_late,8454,1.0,0.98,0.0797,Birc5,Sp1
